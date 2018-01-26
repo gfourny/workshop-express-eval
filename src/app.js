@@ -3,6 +3,11 @@ const app = express();
 var fs = require('fs');
 var bodyParser = require('body-parser');
 
+function readFileNumbers(){
+    var file = fs.readFileSync("numbers.txt");
+    return file.toString().split(" ").join(', ');
+}
+
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/home', function(req, res){
@@ -10,11 +15,10 @@ app.get('/home', function(req, res){
 });
 
 app.get('/bingo', function(req, res){
-    var file = fs.readFileSync("numbers.txt");
-    var content = file.toString().split(" ").join(', ');
+    
     var numbers = req.param('mynumbers');
     numbers = numbers.split(',').join(', ');
-    if(numbers == content){
+    if(numbers == readFileNumbers()){
         res.end('Bingo')
     } else {
         res.end("The bingo game is already started, sorry your numbers doesn't match with known numbers 31, 10, 80, 44, 66 ; so you can not say Bingo")
